@@ -16,6 +16,14 @@
 ## What is in this repository
 
 -   this repository contains codes to read JSON files from the API
+-  structure:
+    + `codes`:
+        + `read-cbop-api.R` -- main file to read the CBOP data in
+        + `functions.R` -- file with the function to read the data in
+        + `cbop-api-download.py` -- Python code to obtain data from the CBOP API
+        + `cbop-zip-files.sh` -- some bash processing (not for reading)
+    + `docs`: 
+        + `pol-api-manual-2024.pdf` -- description of the data
 
 ## Funding
 

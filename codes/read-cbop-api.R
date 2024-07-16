@@ -1,7 +1,10 @@
+## Codes to read the CBOP data from JSON files
+
 library(RcppSimdJson)
 library(data.table)
 library(lubridate)
 library(stringr)
+
 
 source("codes/functions.R")
 
