@@ -1,0 +1,4 @@
+library(fst)
+
+cbop2018 <- read_fst("~/mac/zbiory/cbop/cbop2018_df.fst", as.data.table = T)
+head(cbop2018) |> View()
