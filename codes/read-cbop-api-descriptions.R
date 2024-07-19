@@ -89,3 +89,12 @@ cbop_all[, (email_cols) := lapply(.SD, str_replace_all,
 cbop_all[, war_wyksztalcenia:=str_remove(war_wyksztalcenia, ", brak$")]
 
 saveRDS(cbop_all, file = "~/mac/zbiory/cbop/cbop-2022-23-occup.rds")
+
+
+## save to CSV
+
+cbop_all[, desc:=paste(war_stanowisko, war_zakresObowiazkow, war_wyksztalcenia, war_inneWymagania, war_uprawnienia)]
+cbop_all[]
+
+fwrite(cbop_all[, .(code = poz_kodZawodu, desc)],
+       file = "/Users/berenz/mac/nauka/oja-lab/job-ads-datasets/data/cbop-train-2022-2023-no-employer.tar.gz")
