@@ -59,7 +59,27 @@ read_cbop <- function(file, qdata, verbose = TRUE) {
     warunkiPracyIPlacy <- rbindlist(warunkiPracyIPlacy, fill = T)
     setnames(warunkiPracyIPlacy, names(warunkiPracyIPlacy), paste0("war_", names(warunkiPracyIPlacy)))
     
-    prac_df <- cbind(prac_df, pozostaleDane, warunkiPracyIPlacy)
+    ### requirements
+    wymagania <- lapply(cbop_file[[i]]$wymagania, as.data.table)
+    wymagania <- lapply(wymagania, \(x) x[1,])
+    wymagania <- rbindlist(wymagania, fill = T)
+    wym_cols <- names(wymagania)[grepl('czyPodanoWymagania|inneWymagania|stazWymagOgol', names(wymagania))]
+    wymagania <- wymagania[, ..wym_cols]
+    
+    ## requred 
+    wymagania_kon <- lapply(cbop_file[[i]]$wymagania, "[[", "wymaganiaKonieczne")
+    wymagania_kon <- lapply(wymagania_kon, \(x) as.data.table(x[c("jezyki", "uprawnienia", "wyksztalcenia", "staze")]))
+    wymagania_kon <- lapply(wymagania_kon, \(x) x[1,])
+    null_dfs <- which(lengths(wymagania_kon) == 0)
+    for (l in null_dfs) wymagania_kon[[l]] <-  data.table(jezyki = NA)
+    wymagania_kon <- rbindlist(wymagania_kon, fill = T)
+    
+    setnames(wymagania_kon, names(wymagania_kon), paste0("war_", names(wymagania_kon)))
+    setnames(wymagania, names(wymagania), paste0("war_", names(wymagania)))
+    
+    ### 
+    
+    prac_df <- cbind(prac_df, pozostaleDane, warunkiPracyIPlacy, wymagania, wymagania_kon)
     
     prac_df[, ":="(typOferty = cbop_file[[i]]$typOferty,
                    typOfertyNaglowek = cbop_file[[i]]$typOfertyNaglowek,
@@ -76,8 +96,10 @@ read_cbop <- function(file, qdata, verbose = TRUE) {
 
   ### internal data cleaning
   if (verbose) {
-    print("Number of rows:", nrow(prac_list_df))
+    cat("Number of rows:", nrow(prac_list_df), '\n')
   }
+  
+  ## this may be changed to base::as.Date
   prac_list_df[, ":="(poz_dataPrzyjZglosz=dmy(poz_dataPrzyjZglosz),
                       poz_ofertaWaznaDo=dmy(poz_ofertaWaznaDo))]
   

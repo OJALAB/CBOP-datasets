@@ -5,7 +5,6 @@ library(data.table)
 library(lubridate)
 library(stringr)
 
-
 source("codes/functions.R")
 
 cbop_files <- dir("/Users/berenz/mac/zbiory/cbop/end-of-quarters", full.names = T)
@@ -17,5 +16,8 @@ suppressWarnings(
 
 cbop <- rbindlist(cbop, fill = T)
 
+
+
+## save dataset
 data.table::fwrite(cbop, file = "~/mac/zbiory/cbop/cbop-2021-2023.csv.gz", quote = T)
 
